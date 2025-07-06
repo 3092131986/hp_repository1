@@ -1,0 +1,43 @@
+import qrcode
+import qrcode.image.svg
+from pathlib import Path
+
+# 替换为你的GitHub Pages网址
+public_url = "https://3092131986.github.io/hp_repository1/"
+
+# 生成二维码（参数已优化，适合微信扫描）
+qr = qrcode.QRCode(
+    version=4,  # 中等尺寸，适应较长URL
+    error_correction=qrcode.constants.ERROR_CORRECT_H,  # 高纠错级别
+    box_size=12,  # 每个格子12像素，清晰度适中
+    border=4,  # 边框宽度
+)
+
+try:
+    qr.add_data(public_url)
+    qr.make(fit=True)
+
+    # 生成SVG格式（适合打印、无损缩放）
+    svg_img = qr.make_image(
+        image_factory=qrcode.image.svg.SvgPathImage,
+        fill_color="black",
+        back_color="white"
+    )
+    svg_path = Path("祝福二维码.svg")
+    svg_img.save(svg_path)
+
+    # 生成PNG格式（微信兼容性更好）
+    png_img = qr.make_image(fill_color="black", back_color="white")
+    png_path = Path("祝福二维码.png")
+    png_img.save(png_path)
+
+    print(f"✅ 二维码生成成功！")
+    print(f"- SVG格式：{svg_path.resolve()}")
+    print(f"- PNG格式：{png_path.resolve()}")
+    print(f"扫码后将访问：{public_url}")
+    print("提示：用微信扫描PNG格式效果最佳~")
+
+except Exception as e:
+    print(f"❌ 生成失败：{str(e)}")
+    print("可能原因：URL无法访问 / 网络问题 / 权限不足")
+    print("请确认：https://3092131986.github.io/hp_repository1/ 在浏览器中能正常打开")    
